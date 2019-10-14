@@ -1,4 +1,4 @@
-1. List the following details of each employee: employee number, last name, first name, gender, and salary.
+-- 1. List the following details of each employee: employee number, last name, first name, gender, and salary.
 
 CREATE OR REPLACE VIEW public.employee_dept_list
  AS
@@ -13,7 +13,7 @@ CREATE OR REPLACE VIEW public.employee_dept_list
   ORDER BY e.emp_no;
 
 
-2. List employees who were hired in 1986.
+-- 2. List employees who were hired in 1986.
 CREATE OR REPLACE VIEW public.employee_details
  AS
  SELECT e.emp_no,
@@ -26,7 +26,7 @@ CREATE OR REPLACE VIEW public.employee_details
   WHERE e.emp_no = s.emp_no;
 
 
-3. List the manager of each department with the following information: department number, department name, the manager's employee number, last name, first name, and start and end employment dates.
+-- 3. List the manager of each department with the following information: department number, department name, the manager's employee number, last name, first name, and start and end employment dates.
 CREATE OR REPLACE VIEW public.employees_hire_year
  AS
  SELECT e.emp_no,
@@ -39,7 +39,7 @@ CREATE OR REPLACE VIEW public.employees_hire_year
   WHERE t.from_date >= '1986-01-01'::date AND t.from_date <= '1986-12-31'::date AND e.emp_no = t.emp_no;
 
 
-4. List the department of each employee with the following information: employee number, last name, first name, and department name.
+-- 4. List the department of each employee with the following information: employee number, last name, first name, and department name.
 CREATE OR REPLACE VIEW public.hercules_list
  AS
  SELECT employees.emp_no,
@@ -53,7 +53,7 @@ CREATE OR REPLACE VIEW public.hercules_list
 
 
 
-5. List all employees whose first name is "Hercules" and last names begin with "B."
+-- 5. List all employees whose first name is "Hercules" and last names begin with "B."
 CREATE OR REPLACE VIEW public.managers_list
  AS
  SELECT m.dept_no,
@@ -69,7 +69,7 @@ CREATE OR REPLACE VIEW public.managers_list
   WHERE e.emp_no = m.emp_no AND m.dept_no::text = d.dept_no::text;
 
 
-6. List all employees in the Sales department, including their employee number, last name, first name, and department name.
+-- 6. List all employees in the Sales department, including their employee number, last name, first name, and department name.
 CREATE OR REPLACE VIEW public.name_frequency
  AS
  SELECT employees.last_name,
@@ -78,7 +78,7 @@ CREATE OR REPLACE VIEW public.name_frequency
   GROUP BY employees.last_name;
 
 
-7. List all employees in the Sales and Development departments, including their employee number, last name, first name, and department name.
+-- 7. List all employees in the Sales and Development departments, including their employee number, last name, first name, and department name.
 CREATE OR REPLACE VIEW public.sales_development_employees
  AS
  SELECT e.emp_no,
@@ -91,7 +91,7 @@ CREATE OR REPLACE VIEW public.sales_development_employees
   WHERE d.dept_no::text = de.dept_no::text AND de.emp_no = e.emp_no AND (d.dept_name::text = ANY (ARRAY['Sales'::character varying, 'Development'::character varying]::text[]));
 
 
-8. In descending order, list the frequency count of employee last names, i.e., how many employees share each last name.
+-- 8. In descending order, list the frequency count of employee last names, i.e., how many employees share each last name.
 CREATE OR REPLACE VIEW public.sales_employees
  AS
  SELECT e.emp_no,
