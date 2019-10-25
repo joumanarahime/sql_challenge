@@ -1,7 +1,82 @@
+
+CREATE TABLE departments
+(
+    dept_no character varying(64),
+    dept_name character varying(64),
+    CONSTRAINT departments_pkey PRIMARY KEY (dept_no, dept_name)
+);
+
+CREATE TABLE deptemployee
+(
+    emp_no integer NOT NULL,
+    dept_no character varying(64),
+    from_date date,
+    to_date date,
+    CONSTRAINT deptemployee_pkey PRIMARY KEY (emp_no, dept_no, from_date)
+);
+
+CREATE TABLE deptmanager
+(
+    dept_no character varying(64),
+    emp_no integer NOT NULL,
+    from_date date NOT NULL,
+    to_date date,
+    CONSTRAINT deptmanager_pkey PRIMARY KEY (dept_no, emp_no, from_date)
+);
+
+CREATE TABLE employees
+(
+    emp_no integer NOT NULL,
+    birth_date date,
+    first_name character varying(64),
+    last_name character varying(64),
+    gender character(1),
+    hire_date date,
+    CONSTRAINT employees_pkey PRIMARY KEY (emp_no)
+);
+
+CREATE TABLE salaries
+(
+    emp_no integer NOT NULL,
+    salary money,
+    from_date date,
+    to_date date,
+    CONSTRAINT salaries_pkey PRIMARY KEY (emp_no),
+    CONSTRAINT salaries_emp_no_fkey FOREIGN KEY (emp_no)
+        REFERENCES public.employees (emp_no) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
+CREATE TABLE titles
+(
+    emp_no integer NOT NULL,
+    emp_title character varying(64),
+    from_date date NOT NULL,
+    to_date date,
+    CONSTRAINT titles_pkey PRIMARY KEY (emp_no, from_date),
+    CONSTRAINT titles_emp_no_fkey FOREIGN KEY (emp_no)
+        REFERENCES public.employees (emp_no) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
+
+
+
+\copy departments(dept_no, dept_name) from 'data/departments.csv' csv delimiter ',' header;
+\copy employees(emp_no, birth_date, first_name, last_name, gender, hire_date) from 'data/employees.csv' csv delimiter ',' header;
+\copy salaries(emp_no, salary, from_date, to_date) from 'data/salaries.csv' csv delimiter ',' header;
+\copy titles(emp_no, title, from_date, to_date) from 'data/titles.csv' csv delimiter ',' header;
+\copy dept_emp(emp_no, dept_no, from_date, to_date) from 'data/dept_emp.csv' csv delimiter ',' header;
+\copy dept_manager(dept_no, emp_no, from_date, to_date) from 'data/dept_manager.csv' csv delimiter ',' header;
+
+
 -- 1. List the following details of each employee: employee number, last name, first name, gender, and salary.
 
-CREATE OR REPLACE VIEW public.employee_dept_list
- AS
+
  SELECT e.emp_no,
     e.last_name,
     e.first_name,
@@ -14,8 +89,6 @@ CREATE OR REPLACE VIEW public.employee_dept_list
 
 
 -- 2. List employees who were hired in 1986.
-CREATE OR REPLACE VIEW public.employee_details
- AS
  SELECT e.emp_no,
     e.last_name,
     e.first_name,
@@ -27,8 +100,6 @@ CREATE OR REPLACE VIEW public.employee_details
 
 
 -- 3. List the manager of each department with the following information: department number, department name, the manager's employee number, last name, first name, and start and end employment dates.
-CREATE OR REPLACE VIEW public.employees_hire_year
- AS
  SELECT e.emp_no,
     e.last_name,
     e.first_name,
@@ -40,8 +111,6 @@ CREATE OR REPLACE VIEW public.employees_hire_year
 
 
 -- 4. List the department of each employee with the following information: employee number, last name, first name, and department name.
-CREATE OR REPLACE VIEW public.hercules_list
- AS
  SELECT employees.emp_no,
     employees.birth_date,
     employees.first_name,
@@ -54,8 +123,6 @@ CREATE OR REPLACE VIEW public.hercules_list
 
 
 -- 5. List all employees whose first name is "Hercules" and last names begin with "B."
-CREATE OR REPLACE VIEW public.managers_list
- AS
  SELECT m.dept_no,
     d.dept_name,
     m.emp_no,
@@ -70,8 +137,6 @@ CREATE OR REPLACE VIEW public.managers_list
 
 
 -- 6. List all employees in the Sales department, including their employee number, last name, first name, and department name.
-CREATE OR REPLACE VIEW public.name_frequency
- AS
  SELECT employees.last_name,
     count(*) AS count
    FROM employees
@@ -79,8 +144,6 @@ CREATE OR REPLACE VIEW public.name_frequency
 
 
 -- 7. List all employees in the Sales and Development departments, including their employee number, last name, first name, and department name.
-CREATE OR REPLACE VIEW public.sales_development_employees
- AS
  SELECT e.emp_no,
     e.last_name,
     e.first_name,
@@ -92,8 +155,6 @@ CREATE OR REPLACE VIEW public.sales_development_employees
 
 
 -- 8. In descending order, list the frequency count of employee last names, i.e., how many employees share each last name.
-CREATE OR REPLACE VIEW public.sales_employees
- AS
  SELECT e.emp_no,
     e.last_name,
     e.first_name,
